@@ -1,0 +1,274 @@
+{
+  "name": "glass-canvas",
+  "displayName": "Glass Canvas — 自定义背景",
+  "description": "为 VS Code 工作台添加可自定义背景，并支持从 Pixiv 按 Tag 和分辨率找图。",
+  "version": "0.2.3",
+  "publisher": "glass-canvas-local",
+  "author": {
+    "name": "MrSpring521"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrSpring521/glass-canvas-vscode.git"
+  },
+  "homepage": "https://github.com/MrSpring521/glass-canvas-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/MrSpring521/glass-canvas-vscode/issues"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "background",
+    "wallpaper",
+    "opacity",
+    "透明",
+    "背景图",
+    "pixiv"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "glassCanvas.openPixivSearch",
+        "title": "在 Pixiv 中找背景图",
+        "category": "Glass Canvas",
+        "icon": "$(search)"
+      },
+      {
+        "command": "glassCanvas.quickSetup",
+        "title": "快速设置背景",
+        "category": "Glass Canvas",
+        "icon": "$(paintcan)"
+      },
+      {
+        "command": "glassCanvas.selectImage",
+        "title": "选择背景图",
+        "category": "Glass Canvas",
+        "icon": "$(file-media)"
+      },
+      {
+        "command": "glassCanvas.apply",
+        "title": "应用 / 重新应用背景",
+        "category": "Glass Canvas",
+        "icon": "$(check)"
+      },
+      {
+        "command": "glassCanvas.disable",
+        "title": "停用并移除背景",
+        "category": "Glass Canvas",
+        "icon": "$(circle-slash)"
+      },
+      {
+        "command": "glassCanvas.restoreLatestBackup",
+        "title": "紧急恢复最近备份",
+        "category": "Glass Canvas",
+        "icon": "$(history)"
+      },
+      {
+        "command": "glassCanvas.openSettings",
+        "title": "打开设置",
+        "category": "Glass Canvas",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "glassCanvas.openBackupFolder",
+        "title": "打开备份目录",
+        "category": "Glass Canvas",
+        "icon": "$(folder-opened)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "glassCanvas.openPixivSearch",
+          "group": "navigation@90"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "glassCanvas.disable",
+        "key": "ctrl+alt+shift+f12",
+        "mac": "cmd+alt+shift+f12"
+      }
+    ],
+    "configuration": {
+      "title": "Glass Canvas",
+      "properties": {
+        "glassCanvas.enabled": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine",
+          "description": "是否已启用背景。请使用“应用 / 重新应用背景”或“停用并移除背景”命令更改此项。",
+          "order": 1
+        },
+        "glassCanvas.image": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "tags": [
+            "usesOnlineServices"
+          ],
+          "description": "背景图。支持绝对路径、file URI、HTTPS URL 或 data:image URI；支持 PNG、JPEG、GIF、WebP、BMP、AVIF 和 ICO，推荐使用“选择背景图”命令。",
+          "order": 2
+        },
+        "glassCanvas.opacity": {
+          "type": "number",
+          "default": 0.16,
+          "scope": "machine",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "背景图可见度：0 为完全透明，1 为完全不透明。",
+          "order": 3
+        },
+        "glassCanvas.scope": {
+          "type": "string",
+          "default": "workbench",
+          "scope": "machine",
+          "enum": [
+            "workbench",
+            "editor"
+          ],
+          "enumDescriptions": [
+            "覆盖整个 VS Code 工作台。",
+            "只覆盖编辑器区域。"
+          ],
+          "description": "背景显示范围。",
+          "order": 4
+        },
+        "glassCanvas.size": {
+          "type": "string",
+          "default": "cover",
+          "scope": "machine",
+          "enum": [
+            "cover",
+            "contain",
+            "auto",
+            "stretch"
+          ],
+          "enumDescriptions": [
+            "铺满区域，必要时裁切。",
+            "完整显示，可能留白。",
+            "使用图片原始尺寸。",
+            "拉伸至区域大小。"
+          ],
+          "description": "背景图填充方式。",
+          "order": 5
+        },
+        "glassCanvas.position": {
+          "type": "string",
+          "default": "center",
+          "scope": "machine",
+          "enum": [
+            "center",
+            "top",
+            "bottom",
+            "left",
+            "right",
+            "top left",
+            "top right",
+            "bottom left",
+            "bottom right"
+          ],
+          "description": "背景图对齐位置。",
+          "order": 6
+        },
+        "glassCanvas.repeat": {
+          "type": "string",
+          "default": "no-repeat",
+          "scope": "machine",
+          "enum": [
+            "no-repeat",
+            "repeat",
+            "repeat-x",
+            "repeat-y"
+          ],
+          "description": "背景图重复方式。",
+          "order": 7
+        },
+        "glassCanvas.blur": {
+          "type": "number",
+          "default": 0,
+          "scope": "machine",
+          "minimum": 0,
+          "maximum": 40,
+          "description": "背景图模糊半径（像素）。",
+          "order": 8
+        },
+        "glassCanvas.brightness": {
+          "type": "number",
+          "default": 1,
+          "scope": "machine",
+          "minimum": 0,
+          "maximum": 2,
+          "description": "背景图亮度倍数；深色主题通常适合 0.6–1。",
+          "order": 9
+        },
+        "glassCanvas.saturation": {
+          "type": "number",
+          "default": 1,
+          "scope": "machine",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "背景图饱和度倍数。",
+          "order": 10
+        },
+        "glassCanvas.blendMode": {
+          "type": "string",
+          "default": "normal",
+          "scope": "machine",
+          "enum": [
+            "normal",
+            "soft-light",
+            "overlay",
+            "screen",
+            "multiply"
+          ],
+          "description": "背景图与界面的混合模式。不同主题下效果不同。",
+          "order": 11
+        },
+        "glassCanvas.pixivBlockedTags": {
+          "type": "array",
+          "default": [],
+          "scope": "machine",
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "maxItems": 100,
+          "description": "除内置成人与猎奇过滤词外，需要额外屏蔽的 Pixiv Tag；采用完整 Tag 匹配。",
+          "order": 12
+        }
+      }
+    }
+  },
+  "scripts": {
+    "check": "node --check src/core.js && node --check src/pixiv.js && node --check src/pixivPanel.js && node --check src/extension.js",
+    "test": "node --test",
+    "package": "npx @vscode/vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0"
+  }
+}
