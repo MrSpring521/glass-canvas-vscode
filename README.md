@@ -27,7 +27,7 @@
 - 支持下载 Pixiv 原图或直接应用为背景。
 - 使用 Pixiv 安全分级、作品限制标记和本地 Tag 规则进行工作环境过滤。
 - 修改前自动创建带 SHA-256 校验的版本化备份。
-- 提供移除背景、紧急恢复和 VS Code 更新后重新应用功能。
+- 提供移除背景、紧急恢复和 VS Code 更新后自动重新应用功能。
 
 ## 环境要求
 
@@ -40,10 +40,10 @@
 
 ### 从 VSIX 安装
 
-下载或自行编译 `glass-canvas-0.2.3.vsix`，然后执行：
+下载或自行编译 `glass-canvas-0.2.4.vsix`，然后执行：
 
 ```bash
-code --install-extension glass-canvas-0.2.3.vsix
+code --install-extension glass-canvas-0.2.4.vsix
 ```
 
 也可以在 VS Code 中打开“扩展”视图，点击右上角 `…`，选择“从 VSIX 安装…”。
@@ -159,7 +159,7 @@ sudo setfacl -m "u:$USER:rw" /usr/share/code/resources/app/out/vs/workbench/work
 ## 已知限制
 
 - 修改 VS Code 安装文件属于非官方实现，VS Code 可能提示“安装似乎已损坏”。
-- VS Code 更新会覆盖背景样式；扩展会在下次启动时提示重新应用。
+- VS Code 更新会覆盖背景样式；默认情况下，扩展会在下次启动时自动重新应用并提示重载。可通过 `glassCanvas.autoRepairAfterUpdate` 关闭自动恢复。
 - macOS 修改应用包可能影响代码签名。
 - Web 版 VS Code 不支持；Remote SSH / WSL 场景中扩展运行在本地 UI 侧。
 - Pixiv 使用的是其网页接口，不是稳定的扩展 API；站点调整后可能需要更新本扩展。
@@ -180,7 +180,7 @@ sudo setfacl -m "u:$USER:rw" /usr/share/code/resources/app/out/vs/workbench/work
 
 ### VS Code 更新后背景消失
 
-运行 `Glass Canvas: 应用 / 重新应用背景`。如果扩展检测到旧版补丁，会提示升级或重新应用。
+0.2.4 起，插件会在启动时自动重新应用背景并提示重载。若关闭了 `glassCanvas.autoRepairAfterUpdate`，请运行 `Glass Canvas: 应用 / 重新应用背景`。更新也可能重置 Linux 文件权限；若看到 `EACCES`，请重新执行上面的最小权限命令。
 
 ### 如何安全卸载
 

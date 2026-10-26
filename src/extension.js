@@ -613,10 +613,13 @@ async function checkAfterUpdate(context) {
   try {
     const cssPath = await findWorkbenchCss();
     const current = await fsp.readFile(cssPath, 'utf8');
-    const enabled = getConfiguration().get('enabled');
+    const configuration = getConfiguration();
+    const enabled = configuration.get('enabled');
     const currentPatch = hasInjectedCss(current);
     const anyPatch = hasAnyInjectedCss(current);
     const malformedPatch = current.includes('GLASS CANVAS:') && !anyPatch;
+
+    log(`启动检查：VS Code ${vscode.version || 'unknown'}，背景${enabled ? '已启用' : '未启用'}，补丁${currentPatch ? '存在' : '不存在'}。`);
 
     if (malformedPatch) {
       const restore = '紧急恢复备份';
@@ -631,6 +634,15 @@ async function checkAfterUpdate(context) {
     }
 
     if (enabled && !currentPatch) {
+      if (configuration.get('autoRepairAfterUpdate', true)) {
+        log('检测到 VS Code 更新覆盖了背景样式，正在自动重新应用。');
+        const repaired = await applyBackground(context, { quiet: true });
+        if (repaired) {
+          await promptReload('检测到 VS Code 更新，Glass Canvas 已自动恢复背景；重载窗口后生效。');
+        }
+        return;
+      }
+
       const apply = '重新应用';
       const reason = anyPatch
         ? 'Glass Canvas 检测到旧版背景样式，需要升级后才能继续使用。'

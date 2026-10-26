@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- 兼容 VS Code 1.142 更新后的工作台样式覆盖行为。
+- 新增 `glassCanvas.autoRepairAfterUpdate`，默认在检测到更新覆盖补丁时自动恢复背景。
+- 启动日志现在记录 VS Code 版本、启用状态和补丁检测结果，便于排查升级问题。
+
 ## 0.2.3
 
 - 在扩展清单、README、MIT 许可证和 Pixiv 找图页加入 `MrSpring521` 作者及版权信息。

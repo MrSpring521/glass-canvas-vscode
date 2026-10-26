@@ -166,7 +166,7 @@ test('applies and removes a patch against an isolated fake VS Code app', async (
     ProgressLocation: { Notification: 15 },
     env: { appRoot, uiKind: 1 },
     UIKind: { Desktop: 1, Web: 2 },
-    version: '1.134.0-test'
+    version: '1.142.0-test'
   };
 
   Module._load = function mockedLoad(request, parent, isMain) {
@@ -192,6 +192,19 @@ test('applies and removes a patch against an isolated fake VS Code app', async (
     const patched = await fsp.readFile(cssPath, 'utf8');
     assert.match(patched, /\/\* GLASS CANVAS:START schema=2 \*\//u);
     assert.equal(settings.get('enabled'), true);
+
+    // VS Code replaces this file during an update. A fresh activation should
+    // restore an enabled background without requiring the old manual prompt.
+    await fsp.writeFile(cssPath, originalCss);
+    extension.deactivate();
+    extension.activate(context);
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      if ((await fsp.readFile(cssPath, 'utf8')).includes('GLASS CANVAS:START')) {
+        break;
+      }
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    assert.match(await fsp.readFile(cssPath, 'utf8'), /\/\* GLASS CANVAS:START schema=2 \*\//u);
 
     await handlers.get('glassCanvas.disable')();
     assert.equal(await fsp.readFile(cssPath, 'utf8'), originalCss);

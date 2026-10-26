@@ -2,7 +2,7 @@
   "name": "glass-canvas",
   "displayName": "Glass Canvas — 自定义背景",
   "description": "为 VS Code 工作台添加可自定义背景，并支持从 Pixiv 按 Tag 和分辨率找图。",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "glass-canvas-local",
   "author": {
     "name": "MrSpring521"
@@ -247,6 +247,13 @@
           "description": "背景图与界面的混合模式。不同主题下效果不同。",
           "order": 11
         },
+        "glassCanvas.autoRepairAfterUpdate": {
+          "type": "boolean",
+          "default": true,
+          "scope": "machine",
+          "description": "VS Code 更新覆盖工作台样式后，启动时自动重新应用已启用的背景；仍需对目标 CSS 文件具有写权限。",
+          "order": 12
+        },
         "glassCanvas.pixivBlockedTags": {
           "type": "array",
           "default": [],
@@ -257,7 +264,7 @@
           },
           "maxItems": 100,
           "description": "除内置成人与猎奇过滤词外，需要额外屏蔽的 Pixiv Tag；采用完整 Tag 匹配。",
-          "order": 12
+          "order": 13
         }
       }
     }
